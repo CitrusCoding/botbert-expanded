@@ -15,6 +15,7 @@ from datetime import datetime
 #from discord.ext import commands, tasks
 
 #intents = discord.Intents(messages=True, guilds=True)
+#GLOBAL VARIABLES
 intents = discord.Intents.all()
 intents.members = True
 client = discord.Client(intents=intents)
