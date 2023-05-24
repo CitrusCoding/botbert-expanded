@@ -2,7 +2,7 @@
 import os
 import discord
 import random
-from discord import app_commands 
+from discord import app_commands
 #from discord.ext.commands import Bot
 #keep bot up and running
 from keep_alive import keep_alive
@@ -20,12 +20,13 @@ intents = discord.Intents.all()
 intents.members = True
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
-guildID = 1021925165912838234 #currently for brain zone
+guildID = 1021925165912838234  #currently for brain zone
 #time variables
 today = datetime.now()
 weekday = today.weekday()
 time = today.time().replace(microsecond=0)
-midnight = datetime.strptime("08:25:00", "%H:%M:%S").time()  #convert to a datetime data type
+midnight = datetime.strptime(
+  "08:25:00", "%H:%M:%S").time()  #convert to a datetime data type
 #im going to kill something I hate discord intents so much JUST WORK
 
 keep_alive()
@@ -33,6 +34,7 @@ keep_alive()
 TOKEN = os.environ['TOKEN']
 SERVER = os.environ[
   'MUPPETS']  #this bot is just for vibes, change server manually here (MYSERVER for brain zone, MUPPETS for muppets)
+
 
 @client.event
 async def on_ready():
@@ -56,21 +58,15 @@ async def on_ready():
   #also that works. so the token is not the issue
   await tree.sync(guild=discord.Object(guildID))
 
+
 #COMMANDS
 
-@tree.command(name = "commandname", description = "test commands", guild=discord.Object(id=guildID)) #guild id for brain zone currently, can remove argument entirely but commands will be slower
-async def first_command(interaction):
-    await interaction.response.send_message("Hello!")  
 
-#another attempt at saturday shotrtsssxscv xcv bnbbvgfd
-@tree.command(name = "shortson", description = "activate saturday shorts", guild=discord.Object(id=guildID)) #guild id for brain zone currently, can remove argument entirely but commands will be slower
-async def saturdaysetup(interaction):
-  if weekday == 5:  # saturday is 5 not 6 for some reason
-    if time == midnight:  #at midnight check the date
-      #channel = client.get_channel(953216042728030258) #'wednesday' in muppets
-      choseChannel = client.get_channel(
-        1044920307003170826)  #'botbert's bedroom' in brain
-      await choseChannel.send("https://youtu.be/Xud0YWhQsXc")
+@tree.command(
+  name="test", description="test commands", guild=discord.Object(id=guildID)
+)  #guild id for brain zone currently, can remove argument entirely but commands will be slower
+async def first_command(interaction):
+  await interaction.response.send_message("Commands work! :^D")
 
 #GAMES
 #(weakly) games... please...
@@ -190,7 +186,8 @@ async def on_message(message):
     )  #too much? funny for now, maybe just pick the message or text
 
   #targetted banning (AHA IT WORKS >:D)
-  if "ban" in message.content.lower() and "banned" not in message.content.lower():
+  if "ban" in message.content.lower(
+  ) and "banned" not in message.content.lower():
     for member in message.guild.members:
       if member in message.mentions:
         await message.channel.send("haha get banned " + member.nick)
@@ -200,7 +197,8 @@ async def on_message(message):
   #banned words
   if "bread" in message.content.lower():
     if message.channel.id != 1108636403786600468:
-      await message.channel.send("*you cannot speak of bread outside of the bread channel*")
+      await message.channel.send(
+        "*you cannot speak of bread outside of the bread channel*")
       member = message.author  #the person who sent the message
       banRole = discord.utils.get(member.guild.roles, name="BANNED")
       await member.add_roles(banRole)
@@ -210,7 +208,8 @@ async def on_message(message):
   if (reactChance == 1
       ):  #1 is arbitrary, just lets me change the chance more easily
     await message.add_reaction(
-      reactEmote[random.randint(0, len(reactEmote) - 1)]
+      reactEmote[random.randint(0,
+                                len(reactEmote) - 1)]
     )  #randomly choose an emote from the list to react with
 
 #SEND IMAGES/GIFS
