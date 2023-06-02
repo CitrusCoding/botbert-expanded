@@ -20,20 +20,19 @@ intents = discord.Intents.all()
 intents.members = True
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
-guildID = 1021925165912838234  #currently for brain zone
+guildID = 1021925165912838234 #currently for brain zone
 #time variables
 today = datetime.now()
 weekday = today.weekday()
 time = today.time().replace(microsecond=0)
 midnight = datetime.strptime(
-  "08:25:00", "%H:%M:%S").time()  #convert to a datetime data type
+  "08:25:00", "%H:%M:%S").time() #convert to a datetime data type
 #im going to kill something I hate discord intents so much JUST WORK
 
 keep_alive()
 # secrets ;^)
 TOKEN = os.environ['TOKEN']
-SERVER = os.environ[
-  'MUPPETS']  #this bot is just for vibes, change server manually here (MYSERVER for brain zone, MUPPETS for muppets)
+SERVER = os.environ['MUPPETS']  #this bot is just for vibes, change server manually here (MYSERVER for brain zone, MUPPETS for muppets)
 
 
 @client.event
@@ -62,17 +61,25 @@ async def on_ready():
 #COMMANDS
 
 
-@tree.command(
-  name="test", description="test commands", guild=discord.Object(id=guildID)
-)  #guild id for brain zone currently, can remove argument entirely but commands will be slower
+@tree.command(name="test", description="test commands", guild=discord.Object(id=guildID))  #guild id for brain zone currently, can remove argument entirely but commands will be slower
 async def first_command(interaction):
   await interaction.response.send_message("Commands work! :^D")
 
 #GAMES
 #(weakly) games... please...
 
-#NICKNAME CHANGE
+#turn csv into key-valule pairs
+blockDict = dictFuncs.inputWords(open("tblock.csv"))
 
+#split pairs into lists
+blockList = list(blockDict.keys())
+nameList = list(blockDict.values())
+
+@tree.command(name="bgame", description="minecraft block guessing game :^D", guild=discord.Object(id=guildID))
+async def block_game(interaction):
+  randomBlock = random.randint(1, len(blockList)) #assumes both lists are the same length
+  #await interaction.response.send_message("Guess that block!")
+  await interaction.response.send_message(blockList[randomBlock] + " " + nameList[randomBlock])
 
 #MESSAGE RESPONSES
 @client.event
@@ -120,11 +127,12 @@ async def on_message(message):
 
 #response to haikubot
   if message.author.name == "HaikuBot":
-    await message.channel.send("Thanks for the poem HaikuBot :^)")
+    await message.channel.send(
+      "hello haikubot\nthank you for your cool poems\nI like them a lot :^)"
+    )
 
 #yelling
-  if message.content == "b!a" or "aaa" in message.content.lower(
-  ) and "y" not in message.content.lower():
+  if message.content == "b!a" or "aaa" in message.content.lower() and "y" not in message.content.lower():
     scream = ""
     capDecider = random.randrange(3)  #decide scream case
 
@@ -186,8 +194,7 @@ async def on_message(message):
     )  #too much? funny for now, maybe just pick the message or text
 
   #targetted banning (AHA IT WORKS >:D)
-  if "ban" in message.content.lower(
-  ) and "banned" not in message.content.lower():
+  if "ban" in message.content.lower() and "banned" not in message.content.lower():
     for member in message.guild.members:
       if member in message.mentions:
         await message.channel.send("haha get banned " + member.nick)
@@ -197,25 +204,19 @@ async def on_message(message):
   #banned words
   if "bread" in message.content.lower():
     if message.channel.id != 1108636403786600468:
-      await message.channel.send(
-        "*you cannot speak of bread outside of the bread channel*")
+      await message.channel.send("*you cannot speak of bread outside of the bread channel*")
       member = message.author  #the person who sent the message
       banRole = discord.utils.get(member.guild.roles, name="BANNED")
       await member.add_roles(banRole)
       await message.channel.send("***banned***")
 
 #randomized chance to react to messages expressing approval or disapproval
-  if (reactChance == 1
-      ):  #1 is arbitrary, just lets me change the chance more easily
-    await message.add_reaction(
-      reactEmote[random.randint(0,
-                                len(reactEmote) - 1)]
-    )  #randomly choose an emote from the list to react with
+  if (reactChance == 1):  #1 is arbitrary, just lets me change the chance more easily
+    await message.add_reaction(reactEmote[random.randint(0,len(reactEmote) - 1)])  #randomly choose an emote from the list to react with
 
 #SEND IMAGES/GIFS
 #good luck woosh :)
-  if message.content.lower(
-  ) == "woosh" or message.content == "https://tenor.com/view/magikaikai-magicat-magic-cat-magikai-gif-20378023":
+  if message.content.lower() == "woosh" or message.content == "https://tenor.com/view/magikaikai-magicat-magic-cat-magikai-gif-20378023":
     for i in range(wooshNum):
       await message.channel.send(
         "https://tenor.com/view/magikaikai-magicat-magic-cat-magikai-gif-20378023"
