@@ -1,6 +1,5 @@
 #basic imports
-#helpfssdfgsdfsfdfswerwr
-import os
+#helpfssdfgsdfsfdfswerwrjkjk
 import discord
 import random
 from discord import app_commands
