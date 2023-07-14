@@ -1,5 +1,5 @@
 #basic imports
-#helpfssdfgsdfsf
+#helpfssdfgsdfsfdfswerwr
 import os
 import discord
 import random
