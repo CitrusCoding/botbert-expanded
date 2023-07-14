@@ -1,4 +1,5 @@
 #basic imports
+#help
 import os
 import discord
 import random
@@ -7,7 +8,7 @@ from discord import app_commands
 #keep bot up and running
 from keep_alive import keep_alive
 #for games
-import games
+import games #currently useless
 import dictFuncs
 #keep track of time(?)
 from datetime import datetime
@@ -20,14 +21,15 @@ intents = discord.Intents.all()
 intents.members = True
 client = discord.Client(intents=intents)
 tree = app_commands.CommandTree(client)
-guildID = 1021925165912838234 #currently for brain zone
+guildID = 764395062153969675
+#brain zone: 1021925165912838234
+#muppets: 764395062153969675
 #time variables
 today = datetime.now()
 weekday = today.weekday()
 time = today.time().replace(microsecond=0)
 midnight = datetime.strptime(
   "08:25:00", "%H:%M:%S").time() #convert to a datetime data type
-#im going to kill something I hate discord intents so much JUST WORK
 
 keep_alive()
 # secrets ;^)
@@ -37,14 +39,6 @@ SERVER = os.environ['MUPPETS']  #this bot is just for vibes, change server manua
 
 @client.event
 async def on_ready():
-  #   guild = discord.utils.get(client.guilds, name = SERVER)
-  #   print(
-  #       f'{client.user} is connected to the following guild:\n'
-  #       f'{guild.name}(id: {guild.id})'
-  #   )
-  #NO IDEA WHY THIS DOESNT WORK IM TIRED MAN ^^^^
-  #I give up. return to this later i guess
-
   for guild in client.guilds:
     if guild.name == SERVER:
       break
@@ -53,20 +47,15 @@ async def on_ready():
    f'{guild.name}(id: {guild.id})')
   members = '\n - '.join([member.name for member in guild.members])
   print(f'Members:\n - {members}')  #print list of members in the console
-  #oh my god. potential for bullying right here ^
-  #also that works. so the token is not the issue
   await tree.sync(guild=discord.Object(guildID))
-
 
 #COMMANDS
 
-
-@tree.command(name="test", description="test commands", guild=discord.Object(id=guildID))  #guild id for brain zone currently, can remove argument entirely but commands will be slower
+@tree.command(name="test", description="test commands", guild=discord.Object(id=guildID))  #can remove guild id but commands will be slower (?)
 async def first_command(interaction):
   await interaction.response.send_message("Commands work! :^D")
 
 #GAMES
-#(weakly) games... please...
 
 #turn csv into key-valule pairs
 blockDict = dictFuncs.inputWords(open("tblock.csv"))
@@ -79,9 +68,11 @@ nameList = list(blockDict.values())
 async def block_game(interaction):
   randomBlock = random.randint(1, len(blockList)) #assumes both lists are the same length
   #await interaction.response.send_message("Guess that block!")
-  await interaction.response.send_message(blockList[randomBlock] + " " + nameList[randomBlock])
+  await interaction.response.send_message(blockList[randomBlock]) 
+  # + " " + nameList[randomBlock]
 
 #MESSAGE RESPONSES
+
 @client.event
 async def on_message(message):
 
@@ -115,7 +106,7 @@ async def on_message(message):
   elif 'botbert' in message.content:
     await message.channel.send('That is me hello :^)')
 
-#responses to froggo
+#responses to froggo (rip)
   if message.content == "f is for friends who do stuff together <3":
     await message.channel.send("u is for you and me <3")
 
@@ -204,12 +195,20 @@ async def on_message(message):
   #banned words
   if "bread" in message.content.lower():
     if message.channel.id != 1108636403786600468:
+      await message.delete()
       await message.channel.send("*you cannot speak of bread outside of the bread channel*")
       member = message.author  #the person who sent the message
       banRole = discord.utils.get(member.guild.roles, name="BANNED")
       await member.add_roles(banRole)
       await message.channel.send("***banned***")
-
+      
+  #nickname changes
+  #if "change name" in message.content.lower():
+    #for member in message.guild.members:
+      #if member in message.mentions:
+        #await member.edit(nick="message.content")
+#does not have the permissions for this and I am too lazy to find how to change them
+  
 #randomized chance to react to messages expressing approval or disapproval
   if (reactChance == 1):  #1 is arbitrary, just lets me change the chance more easily
     await message.add_reaction(reactEmote[random.randint(0,len(reactEmote) - 1)])  #randomly choose an emote from the list to react with
@@ -242,7 +241,10 @@ async def on_message(message):
 
 #boomer
   if "boomer" in message.content.lower():
-    await message.channel.send("https://dodo.ac/np/images/7/7d/Boomer_NH.png")
+    if random.randint(1,30) == 1:
+      await message.channel.send("https://cdn.discordapp.com/attachments/1108641500922904677/1122068724472619028/doooooomer.png")
+    else:
+      await message.channel.send("https://dodo.ac/np/images/7/7d/Boomer_NH.png")
 
 #jon crying
   if "arbuckle" in message.content.lower():
@@ -261,7 +263,6 @@ async def on_message(message):
 #every second you're not running I'm only getting closer
   if message.content.lower() == "run":
     await message.channel.send("https://www.youtube.com/shorts/uoLymUpqZt4")
-    #they deleted the original video I hate youtube shorts
 
 #TIME BASED
 #just a test 4 saturday shorts
