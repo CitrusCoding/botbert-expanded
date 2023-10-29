@@ -1,4 +1,6 @@
 #basic imports
+#another test comment
+import os
 import discord
 import random
 from discord import app_commands
@@ -79,7 +81,7 @@ async def on_message(message):
   screamNum = random.randint(1, 500)
   coolness = [
     "im cool", "i'm cool", "i'm so cool", "im so cool", "i am cool",
-    "i am so cool"
+    "i am so cool", "im kool", "i'm kool", 'im so kool'
   ]
   reactEmote = [
     '<:goodsim:878136216300707900>', '<:badsim:878135979247030283>'
@@ -153,11 +155,15 @@ async def on_message(message):
     if cool in message.content.lower():
       await message.channel.send("no you're not")
 
-  if message.author.name == "koof":
+  if message.author.name == "koof.":
     if "cool" in message.content.lower():
       if "not" not in message.content.lower():
         await message.channel.send("you're not cool")
         await message.add_reaction('<:badsim:878135979247030283>')
+
+  if message.author.name == "absalame":
+    if "i love you botbert" in message.content.lower():
+      await message.channel.send("I love you Ben.")
 
 #BAN PEOPLE >:^}
 #ban yourself
@@ -168,27 +174,33 @@ async def on_message(message):
     await message.channel.send("kinda weird but ok")
 
   #ban everyone
-  if message.content == "ban everyone":
+  if "ban everyone" in message.content.lower():
+    #decide which "banned" role to add and which image to send
+    if "homophobic" in message.content.lower():
+      roleName = "BANNED (homophobic)" #(((JOKE ROLE)))
+      reactImg = "https://pbs.twimg.com/media/FN5RFYXVQAA3nvm?format=jpg&name=small"
+    else: 
+      roleName = "BANNED"
+      reactImg = "https://i.kym-cdn.com/photos/images/newsfeed/001/242/769/89d.gif"
     #loop through all the members in the server
     for member in message.guild.members:
-      #don't ban them if theyre a bot because it would be a pain to unban them all
-      botRole = discord.utils.get(member.guild.roles, name="bot")
+      #ignore bots
+      botRole = discord.utils.get(member.guild.roles, name = "bot")
       if botRole not in member.roles:
         #give everyone else the banned role hehe
-        banRole = discord.utils.get(member.guild.roles, name="BANNED")
+        banRole = discord.utils.get(member.guild.roles, name = roleName)
         await member.add_roles(banRole)
+    #announce completion
     await message.channel.send("done. none of you are free of sin")
-    await message.channel.send(
-      "https://i.kym-cdn.com/photos/images/newsfeed/001/242/769/89d.gif"
-    )  #too much? funny for now, maybe just pick the message or text
+    await message.channel.send(reactImg) 
 
   #targetted banning (AHA IT WORKS >:D)
   if "ban" in message.content.lower() and "banned" not in message.content.lower():
     for member in message.guild.members:
       if member in message.mentions:
         await message.channel.send("haha get banned " + member.nick)
-        banRole = discord.utils.get(member.guild.roles, name="BANNED")
-        await member.add_roles(banRole)
+        banRole = discord.utils.get(member.guild.roles, name = "BANNED")
+        await member.add_roles(banRole)  
 
   #banned words
   if "bread" in message.content.lower():
@@ -196,10 +208,23 @@ async def on_message(message):
       await message.delete()
       await message.channel.send("*you cannot speak of bread outside of the bread channel*")
       member = message.author  #the person who sent the message
-      banRole = discord.utils.get(member.guild.roles, name="BANNED")
+      banRole = discord.utils.get(member.guild.roles, name = "BANNED")
       await member.add_roles(banRole)
       await message.channel.send("***banned***")
-      
+
+  #unban everyone
+  if message.content.lower() == "botbert free us":
+    await message.channel.send("ok..... give me a second")
+    #loop through members
+    for member in message.guild.members:
+      banRole1 = discord.utils.get(member.guild.roles, name = "BANNED")
+      banRole2 = discord.utils.get(member.guild.roles, name = "BANNED (homophobic)")
+      if banRole1 in member.roles:
+        await member.remove_roles(banRole1)
+      if banRole2 in member.roles:
+        await member.remove_roles(banRole2)
+    await message.channel.send("ok, unbanned :^)")
+    
   #nickname changes
   #if "change name" in message.content.lower():
     #for member in message.guild.members:
@@ -307,7 +332,9 @@ async def on_member_join(member):
     f'Who are you. Get out of my server {member.name}')
 
 
-#I don't want to create a new account to test this. I'm just gonna assume it works (it doesnt :( )
-
 #RUN
 client.run(TOKEN)
+
+#TO PUSH TO GIT
+#GIT COMMIT -AM "COMMENT"
+#GIT PUSH
